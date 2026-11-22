@@ -1,0 +1,13 @@
+{
+  "name": "p5-sketches",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "browser-sync start --server --port 3000 --files \"**/*.html, **/*.js, **/*.json, !node_modules/**\" --no-open --no-notify",
+    "new": "node scripts/new-sketch.mjs"
+  },
+  "devDependencies": {
+    "@types/p5": "1.7.7",
+    "browser-sync": "3.0.4"
+  }
+}

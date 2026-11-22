@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>p5 sketchbook</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 32px; background: #111; color: #eee; font: 14px/1.4 system-ui, sans-serif; }
+      h1 { margin: 0 0 24px; font-size: 20px; font-weight: 600; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+      .card { display: block; color: inherit; text-decoration: none; background: #1b1b1b; border-radius: 8px; overflow: hidden; transition: transform 0.15s; }
+      .card:hover { transform: translateY(-2px); }
+      .thumb { aspect-ratio: 16 / 10; background: #222; display: grid; place-items: center; color: #555; overflow: hidden; }
+      .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .meta { padding: 10px 12px; }
+      .title { font-weight: 600; }
+      .date { color: #888; font-size: 12px; }
+      .empty { color: #777; }
+      code { background: #222; padding: 2px 6px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>p5 sketchbook</h1>
+    <div id="grid" class="grid"></div>
+    <script>
+      fetch("sketches.json", { cache: "no-store" })
+        .then((r) => r.json())
+        .then((sketches) => {
+          const grid = document.getElementById("grid");
+          if (!sketches.length) {
+            grid.outerHTML = '<p class="empty">No sketches yet. Run <code>npm run new &lt;slug&gt;</code>.</p>';
+            return;
+          }
+          sketches
+            .slice()
+            .sort((a, b) => b.dir.localeCompare(a.dir))
+            .forEach((s) => {
+              const href = `sketches/${s.dir}/`;
+              const card = document.createElement("a");
+              card.className = "card";
+              card.href = href;
+
+              const thumb = document.createElement("div");
+              thumb.className = "thumb";
+              const img = new Image();
+              img.alt = s.title;
+              img.loading = "lazy";
+              img.src = href + "thumbnail.png";
+              img.onerror = () => { thumb.textContent = s.slug; };
+              thumb.appendChild(img);
+
+              const meta = document.createElement("div");
+              meta.className = "meta";
+              const title = document.createElement("div");
+              title.className = "title";
+              title.textContent = s.title;
+              const date = document.createElement("div");
+              date.className = "date";
+              date.textContent = s.date;
+              meta.append(title, date);
+
+              card.append(thumb, meta);
+              grid.appendChild(card);
+            });
+        })
+        .catch((err) => {
+          document.body.insertAdjacentHTML("beforeend", '<p class="empty">Could not load sketches.json</p>');
+          console.error(err);
+        });
+    </script>
+  </body>
+</html>

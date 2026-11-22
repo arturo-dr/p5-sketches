@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "checkJs": false,
+    "allowJs": true,
+    "noEmit": true,
+    "types": []
+  },
+  "include": ["node_modules/@types/p5/global.d.ts", "_template/**/*.js", "sketches/**/*.js", "lib/**/*.js"]
+}
